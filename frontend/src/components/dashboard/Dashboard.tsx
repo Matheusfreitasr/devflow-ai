@@ -5,10 +5,19 @@ import { RecentDemands } from './RecentDemands'
 
 interface DashboardProps {
   demands: Demand[]
+  isLoading: boolean
+  loadError: string | null
   onCreateDemand: () => void
+  onRetry: () => void
 }
 
-export function Dashboard({ demands, onCreateDemand }: DashboardProps) {
+export function Dashboard({
+  demands,
+  isLoading,
+  loadError,
+  onCreateDemand,
+  onRetry,
+}: DashboardProps) {
   const completedCount = demands.filter((demand) => demand.status === 'Concluído').length
   const metrics = [
     { label: 'Projetos', value: '12', detail: '3 ativos este mês', icon: 'projects', tone: 'violet' },
@@ -32,7 +41,19 @@ export function Dashboard({ demands, onCreateDemand }: DashboardProps) {
         <section className="metrics-grid" aria-label="Resumo do workspace">
           {metrics.map((metric) => <MetricCard key={metric.label} {...metric} />)}
         </section>
-        <RecentDemands demands={demands} />
+        {loadError && (
+          <div className="api-feedback" role="alert">
+            <p>{loadError}</p>
+            <button className="secondary-button" type="button" onClick={onRetry}>
+              Tentar novamente
+            </button>
+          </div>
+        )}
+        {isLoading ? (
+          <p className="loading-message" role="status">Carregando demandas...</p>
+        ) : (
+          <RecentDemands demands={demands} />
+        )}
         <footer className="page-footer">DevFlow AI <span>·</span> Organize seu fluxo de desenvolvimento</footer>
       </div>
     </>

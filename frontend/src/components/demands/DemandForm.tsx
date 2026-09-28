@@ -3,12 +3,13 @@ import { Icon } from '../Icon'
 import type {
   DemandPriority,
   DemandStatus,
+  Demand,
   NewDemandInput,
 } from '../../types/demand'
 
 interface DemandFormProps {
   onCancel: () => void
-  onCreate: (demand: NewDemandInput) => void
+  onCreate: (demand: NewDemandInput) => Promise<Demand>
 }
 
 interface FormErrors {
@@ -22,8 +23,10 @@ export function DemandForm({ onCancel, onCreate }: DemandFormProps) {
   const [priority, setPriority] = useState<DemandPriority>('Média')
   const [status, setStatus] = useState<DemandStatus>('Backlog')
   const [errors, setErrors] = useState<FormErrors>({})
+  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const nextErrors: FormErrors = {}
@@ -35,7 +38,15 @@ export function DemandForm({ onCancel, onCreate }: DemandFormProps) {
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
 
-    onCreate({ title: title.trim(), description: description.trim(), priority, status })
+    setSubmitError(null)
+    setIsSubmitting(true)
+    try {
+      await onCreate({ title: title.trim(), description: description.trim(), priority, status })
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Não foi possível criar a demanda.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -49,7 +60,7 @@ export function DemandForm({ onCancel, onCreate }: DemandFormProps) {
       </header>
 
       <div className="page-content demand-page">
-        <button className="back-link" type="button" onClick={onCancel}>
+        <button className="back-link" type="button" onClick={onCancel} disabled={isSubmitting}>
           <Icon name="arrowLeft" size={17} />
           Voltar ao dashboard
         </button>
@@ -62,7 +73,8 @@ export function DemandForm({ onCancel, onCreate }: DemandFormProps) {
           </p>
         </section>
 
-        <form className="demand-form" onSubmit={handleSubmit} noValidate>
+        <form className="demand-form" onSubmit={(event) => void handleSubmit(event)} noValidate>
+          {submitError && <p className="submit-error" role="alert">{submitError}</p>}
           <div className="form-grid">
             <div className="form-field field-wide">
               <label htmlFor="demand-title">Título <span>Obrigatório</span></label>
@@ -71,7 +83,10 @@ export function DemandForm({ onCancel, onCreate }: DemandFormProps) {
                 id="demand-title"
                 name="title"
                 value={title}
-                onChange={(event) => setTitle(event.target.value)}
+                onChange={(event) => {
+                  setTitle(event.target.value)
+                  if (errors.title) setErrors((current) => ({ ...current, title: undefined }))
+                }}
                 aria-invalid={Boolean(errors.title)}
                 aria-describedby={errors.title ? 'title-error' : undefined}
                 required
@@ -87,7 +102,12 @@ export function DemandForm({ onCancel, onCreate }: DemandFormProps) {
                 id="demand-description"
                 name="description"
                 value={description}
-                onChange={(event) => setDescription(event.target.value)}
+                onChange={(event) => {
+                  setDescription(event.target.value)
+                  if (errors.description) {
+                    setErrors((current) => ({ ...current, description: undefined }))
+                  }
+                }}
                 aria-invalid={Boolean(errors.description)}
                 aria-describedby={errors.description ? 'description-error' : undefined}
                 required
@@ -130,11 +150,11 @@ export function DemandForm({ onCancel, onCreate }: DemandFormProps) {
           </div>
 
           <div className="form-actions">
-            <button className="secondary-button" type="button" onClick={onCancel}>
+            <button className="secondary-button" type="button" onClick={onCancel} disabled={isSubmitting}>
               Cancelar
             </button>
-            <button className="primary-button" type="submit">
-              Criar demanda
+            <button className="primary-button" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Salvando...' : 'Criar demanda'}
             </button>
           </div>
         </form>

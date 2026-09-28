@@ -44,18 +44,20 @@ export function RecentDemands({ demands }: RecentDemandsProps) {
             </tr>
           </thead>
           <tbody>
-            {demands.map((demand) => (
-              <tr key={demand.id}>
-                <td className="demand-title" title={demand.description}>{demand.title}</td>
-                <td>
-                  <span className={`priority-badge ${priorityClass[demand.priority]}`}>
-                    {demand.priority}
-                  </span>
-                </td>
-                <td><span className={`status-badge ${statusClass[demand.status]}`}>{demand.status}</span></td>
-                <td className="updated-at">{formatCreatedAt(demand.createdAt)}</td>
-              </tr>
-            ))}
+            {demands.length === 0 ? (
+              <tr><td className="empty-row" colSpan={4}>Nenhuma demanda cadastrada ainda.</td></tr>
+            ) : demands.map((demand) => (
+                <tr key={demand.id}>
+                  <td className="demand-title" title={demand.description}>{demand.title}</td>
+                  <td>
+                    <span className={`priority-badge ${priorityClass[demand.priority]}`}>
+                      {demand.priority}
+                    </span>
+                  </td>
+                  <td><span className={`status-badge ${statusClass[demand.status]}`}>{demand.status}</span></td>
+                  <td className="updated-at">{formatCreatedAt(demand.createdAt)}</td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
