@@ -1,9 +1,9 @@
-import type { ValidationDetail } from '../types/apiError.js'
+import type { ApiErrorCode, ValidationDetail } from '../types/apiError.js'
 
 export class ApiException extends Error {
   constructor(
     public readonly statusCode: number,
-    public readonly code: string,
+    public readonly code: ApiErrorCode,
     message: string,
     public readonly details?: ValidationDetail[],
   ) {
