@@ -31,7 +31,7 @@ export function Dashboard({
     <>
       <header className="topbar">
         <div className="breadcrumb"><span>Workspace</span><span className="breadcrumb-divider">/</span><strong>Visão geral</strong></div>
-        <div className="topbar-actions"><span className="online-indicator"><span /> Espaço de trabalho</span><span className="avatar avatar-small" aria-label="Matheus Pereira">MP</span></div>
+        <div className="topbar-actions"><span className="online-indicator"><span /> Espaço de trabalho</span><span className="avatar avatar-small" aria-label="Matheus Rabelo">MR</span></div>
       </header>
       <div className="page-content">
         <section className="dashboard-intro" aria-labelledby="page-title">
