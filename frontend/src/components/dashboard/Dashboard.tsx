@@ -9,6 +9,7 @@ interface DashboardProps {
   loadError: string | null
   onCreateDemand: () => void
   onRetry: () => void
+  onSelectDemand: (demandId: string) => void
 }
 
 export function Dashboard({
@@ -17,6 +18,7 @@ export function Dashboard({
   loadError,
   onCreateDemand,
   onRetry,
+  onSelectDemand,
 }: DashboardProps) {
   const completedCount = demands.filter((demand) => demand.status === 'Concluído').length
   const metrics = [
@@ -52,7 +54,7 @@ export function Dashboard({
         {isLoading ? (
           <p className="loading-message" role="status">Carregando demandas...</p>
         ) : (
-          <RecentDemands demands={demands} />
+          <RecentDemands demands={demands} onSelectDemand={onSelectDemand} />
         )}
         <footer className="page-footer">DevFlow AI <span>·</span> Organize seu fluxo de desenvolvimento</footer>
       </div>

@@ -2,6 +2,7 @@ import type { Demand, DemandPriority, DemandStatus } from '../../types/demand'
 
 interface RecentDemandsProps {
   demands: Demand[]
+  onSelectDemand: (demandId: string) => void
 }
 
 const statusClass: Record<DemandStatus, string> = {
@@ -26,7 +27,7 @@ function formatCreatedAt(createdAt: string): string {
   return new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short' }).format(new Date(createdAt))
 }
 
-export function RecentDemands({ demands }: RecentDemandsProps) {
+export function RecentDemands({ demands, onSelectDemand }: RecentDemandsProps) {
   return (
     <section className="recent-section" aria-labelledby="recent-heading">
       <div className="section-heading">
@@ -41,11 +42,12 @@ export function RecentDemands({ demands }: RecentDemandsProps) {
               <th scope="col">Prioridade</th>
               <th scope="col">Status</th>
               <th scope="col">Criada</th>
+              <th scope="col"><span className="visually-hidden">Ações</span></th>
             </tr>
           </thead>
           <tbody>
             {demands.length === 0 ? (
-              <tr><td className="empty-row" colSpan={4}>Nenhuma demanda cadastrada ainda.</td></tr>
+              <tr><td className="empty-row" colSpan={5}>Nenhuma demanda cadastrada ainda.</td></tr>
             ) : demands.map((demand) => (
                 <tr key={demand.id}>
                   <td className="demand-title" title={demand.description}>{demand.title}</td>
@@ -56,6 +58,16 @@ export function RecentDemands({ demands }: RecentDemandsProps) {
                   </td>
                   <td><span className={`status-badge ${statusClass[demand.status]}`}>{demand.status}</span></td>
                   <td className="updated-at">{formatCreatedAt(demand.createdAt)}</td>
+                  <td className="demand-action-cell">
+                    <button
+                      className="demand-open-button"
+                      type="button"
+                      onClick={() => onSelectDemand(demand.id)}
+                      aria-label={`Ver detalhes de ${demand.title}`}
+                    >
+                      Abrir detalhes
+                    </button>
+                  </td>
                 </tr>
               ))}
           </tbody>

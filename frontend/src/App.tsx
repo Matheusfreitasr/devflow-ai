@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import './App.css'
 import { Dashboard } from './components/dashboard/Dashboard'
 import { DemandForm } from './components/demands/DemandForm'
+import { DemandDetails } from './components/demands/DemandDetails'
 import { AppShell } from './components/layout/AppShell'
 import { demandsApi } from './services/demands'
 import type { Demand, NewDemandInput } from './types/demand'
@@ -11,6 +12,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [isCreatingDemand, setIsCreatingDemand] = useState(false)
+  const [selectedDemandId, setSelectedDemandId] = useState<string | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -52,12 +54,19 @@ function App() {
     return demand
   }
 
+  const selectedDemand = demands.find((demand) => demand.id === selectedDemandId)
+
   return (
     <AppShell>
       {isCreatingDemand ? (
         <DemandForm
           onCancel={() => setIsCreatingDemand(false)}
           onCreate={createDemand}
+        />
+      ) : selectedDemand ? (
+        <DemandDetails
+          demand={selectedDemand}
+          onBack={() => setSelectedDemandId(null)}
         />
       ) : (
         <Dashboard
@@ -66,6 +75,7 @@ function App() {
           loadError={loadError}
           onCreateDemand={() => setIsCreatingDemand(true)}
           onRetry={() => void loadDemands()}
+          onSelectDemand={(demandId) => setSelectedDemandId(demandId)}
         />
       )}
     </AppShell>
