@@ -7,7 +7,7 @@ function getDemandId(request) {
     }
     return id;
 }
-export function createDemandController(demandService) {
+export function createDemandController(demandService, demandAnalysisService) {
     const list = (_request, response) => {
         response.json(demandService.list());
     };
@@ -35,5 +35,12 @@ export function createDemandController(demandService) {
             throw new ApiException(404, 'DEMAND_NOT_FOUND', 'Demanda não encontrada.');
         response.status(204).end();
     };
-    return { list, getById, create, update, remove };
+    const analyze = async (request, response) => {
+        const demand = demandService.getById(getDemandId(request));
+        if (!demand)
+            throw new ApiException(404, 'DEMAND_NOT_FOUND', 'Demanda não encontrada.');
+        const analysis = await demandAnalysisService.analyze(demand);
+        response.status(200).json(analysis);
+    };
+    return { list, getById, create, update, remove, analyze };
 }

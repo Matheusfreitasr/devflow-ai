@@ -2,6 +2,7 @@ import type { RequestHandler } from 'express'
 import { ApiException } from '../services/apiException.js'
 import { parseDemandInput } from '../services/demandValidation.js'
 import type { DemandService } from '../services/demandService.js'
+import type { DemandAnalysisService } from '../services/demandAnalysisService.js'
 
 function getDemandId(request: Parameters<RequestHandler>[0]): string {
   const id: unknown = request.params.id
@@ -11,7 +12,10 @@ function getDemandId(request: Parameters<RequestHandler>[0]): string {
   return id
 }
 
-export function createDemandController(demandService: DemandService) {
+export function createDemandController(
+  demandService: DemandService,
+  demandAnalysisService: DemandAnalysisService,
+) {
   const list: RequestHandler = (_request, response) => {
     response.json(demandService.list())
   }
@@ -41,5 +45,13 @@ export function createDemandController(demandService: DemandService) {
     response.status(204).end()
   }
 
-  return { list, getById, create, update, remove }
+  const analyze: RequestHandler = async (request, response) => {
+    const demand = demandService.getById(getDemandId(request))
+    if (!demand) throw new ApiException(404, 'DEMAND_NOT_FOUND', 'Demanda não encontrada.')
+
+    const analysis = await demandAnalysisService.analyze(demand)
+    response.status(200).json(analysis)
+  }
+
+  return { list, getById, create, update, remove, analyze }
 }
