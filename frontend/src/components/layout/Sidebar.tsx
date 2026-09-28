@@ -33,8 +33,8 @@ export function Sidebar() {
           <p>Menos retrabalho,<br /><strong>mais fluxo.</strong></p>
         </div>
         <div className="profile">
-          <span className="avatar">MP</span>
-          <span className="profile-copy"><strong>Matheus Pereira</strong><small>Plano gratuito</small></span>
+          <span className="avatar">MR</span>
+          <span className="profile-copy"><strong>Matheus Rabelo</strong><small>Plano gratuito</small></span>
           <span className="profile-menu" aria-hidden="true">···</span>
         </div>
       </div>
