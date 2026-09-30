@@ -1,9 +1,19 @@
 import Database from 'better-sqlite3'
+import fs from 'node:fs'
 import path from 'node:path'
 
-const databasePath = path.resolve(
+const dataDirectory = path.resolve(
   process.cwd(),
-  'data/devflow.db',
+  'data',
+)
+
+fs.mkdirSync(dataDirectory, {
+  recursive: true,
+})
+
+const databasePath = path.join(
+  dataDirectory,
+  'devflow.db',
 )
 
 export const database = new Database(databasePath)
