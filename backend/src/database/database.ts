@@ -1,13 +1,9 @@
 import Database from 'better-sqlite3'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const currentFilePath = fileURLToPath(import.meta.url)
-const currentDirectory = path.dirname(currentFilePath)
 
 const databasePath = path.resolve(
-  currentDirectory,
-  '../../data/devflow.db',
+  process.cwd(),
+  'data/devflow.db',
 )
 
 export const database = new Database(databasePath)
