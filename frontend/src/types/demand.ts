@@ -1,3 +1,5 @@
+import type { DemandAnalysisResult } from './demandAnalysis.js'
+
 export type DemandPriority = 'Baixa' | 'Média' | 'Alta'
 
 export type DemandStatus =
@@ -13,6 +15,7 @@ export interface Demand {
   priority: DemandPriority
   status: DemandStatus
   createdAt: string
+  analysis?: DemandAnalysisResult
 }
 
 export type NewDemandInput = Pick<

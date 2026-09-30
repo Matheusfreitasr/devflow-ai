@@ -3,11 +3,19 @@ export interface AiProviderConfig {
   model: string
 }
 
-/** Reads the server-only key. It intentionally does not load files or call a provider. */
+/**
+ * Lê as configurações do provedor de IA a partir das
+ * variáveis de ambiente do servidor.
+ */
 export function readAiProviderConfig(
   environment: NodeJS.ProcessEnv = process.env,
 ): AiProviderConfig {
-  const apiKey = environment.OPENAI_API_KEY?.trim()
-  const model = environment.OPENAI_MODEL?.trim() || 'gpt-6-astra'
-  return { ...(apiKey ? { apiKey } : {}), model }
+  const apiKey = environment.GEMINI_API_KEY?.trim()
+  const model =
+    environment.GEMINI_MODEL?.trim() || 'gemini-2.5-flash-lite'
+
+  return {
+    ...(apiKey ? { apiKey } : {}),
+    model,
+  }
 }

@@ -81,7 +81,10 @@ export function DemandDetails({ demand, onBack }: DemandDetailsProps) {
           </dl>
         </section>
 
-        <DemandAnalysisPanel demandId={demand.id} />
+        <DemandAnalysisPanel
+          demandId={demand.id}
+          initialAnalysis={demand.analysis}
+        />
       </div>
     </>
   )
