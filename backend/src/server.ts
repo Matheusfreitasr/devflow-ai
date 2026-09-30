@@ -1,5 +1,6 @@
 import 'dotenv/config'
-import { createApp } from './app.js'
+
+import app from './app.js'
 
 const port = Number(process.env.PORT ?? 3001)
 const host = process.env.HOST ?? '127.0.0.1'
@@ -15,10 +16,10 @@ console.log(
 
 console.log(
   'Modelo Gemini configurado:',
-  process.env.GEMINI_MODEL ?? 'gemini-2.5-flash-lite',
+  process.env.GEMINI_MODEL ?? 'gemini-3.5-flash-lite',
 )
 
-const server = createApp().listen(port, host, () => {
+const server = app.listen(port, host, () => {
   console.log(`DevFlow AI API disponível em http://${host}:${port}`)
 })
 
