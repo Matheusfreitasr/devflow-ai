@@ -4,7 +4,7 @@
     "backend": {
       "root": "backend",
       "framework": "node",
-      "entrypoint": "src/server.ts"
+      "entrypoint": "src/server.cts"
     },
     "frontend": {
       "root": "frontend",
