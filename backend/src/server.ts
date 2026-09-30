@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import app from './expressApp.js'
 
 const port = Number(process.env.PORT ?? 3001)
