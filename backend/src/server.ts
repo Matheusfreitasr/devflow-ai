@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import app from './app.js'
+import app from './expressApp.js'
 
 const port = Number(process.env.PORT ?? 3001)
 const host = process.env.HOST ?? '127.0.0.1'
